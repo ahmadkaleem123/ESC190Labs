@@ -69,6 +69,30 @@ struct node * del(struct node *head, void *data){
     return head;
 }
 
+void del2(struct node **head, void *data){
+    struct node *cur = *head;
+    struct node *prev = *head;
+    int pos = 0;
+    while (cur != NULL){
+        if(cur->p_data == data){
+            if(pos == 0){
+                *head = (*head)->next;
+                free(cur);
+                return;
+            }
+            else{
+                prev->next = cur->next;
+                free(cur);
+                return;
+            }
+        }
+        prev = cur;
+        cur = cur->next;
+        pos++;
+        
+    }
+}
+
 void free_list(struct node *head){
     struct node *cur = head;
     while(head != NULL){

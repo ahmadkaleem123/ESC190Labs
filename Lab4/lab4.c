@@ -27,9 +27,10 @@ int main (void){
     //print_list(a);
     insert(a, d3, 0,1);
     insert(a, d4, 1,1);
-    a = del(a,d);
+    //a = del(a,d);
     insert(a, d4, 0,1);
-    free(a);
+    del2(&a, d4);
+    //free(a);
     print_list(a);
     //printf("%d\n", *(int *)(a->p_data));
     return 0;

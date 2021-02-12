@@ -11,6 +11,8 @@ void insert(struct node *head, void *data, int pos, int data_type);
 
 struct node* del(struct node *head, void *data);
 
+void del2(struct node **head, void *data);
+
 void free_list(struct node *head);
 
 void print_list(struct node *head);
