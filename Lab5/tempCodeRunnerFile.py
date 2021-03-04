@@ -1,0 +1,5 @@
+    print(TO.visited)
+    print(NYC.visited)
+    print(SF.visited)
+    print(CDMX.visited)
+    print(DC.visited)
