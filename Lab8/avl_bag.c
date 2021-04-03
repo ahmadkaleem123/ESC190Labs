@@ -755,16 +755,18 @@ void print(bag_elem_t elem){
 bool avl_remove2(avl_node_t **root, bag_elem_t elem,
                 int (*cmp)(bag_elem_t, bag_elem_t))
 {
+  
     const int  height = HEIGHT(*root);
     avl_node_t** prevs = ( avl_node_t**) malloc(sizeof(avl_node_t*) * height); 
+  
 
     avl_node_t *cur = *root;
-   // avl_node_t *prev = *root;
+  
     bool removed =false;
     int i = 0;
     int dir;
     while(cur != NULL){
-        printf("in while\n");
+      
         if( (*cmp)(elem,cur->elem) == 0){
             if ((cur)->left && (cur)->right) {
                 if (HEIGHT((cur)->left) > HEIGHT((cur)->right))
@@ -774,11 +776,12 @@ bool avl_remove2(avl_node_t **root, bag_elem_t elem,
                 
                 avl_update_height(cur);
                 prevs[i] = cur;
+               
             } 
             else {
                 if(i == 0){
-                    printf("in remove else\n");
-                    //prevs[i-1] ->right = cur->right;
+                
+                  
                     avl_node_t *old = cur;
                     if(cur->left != NULL){
                         cur = cur->left;
@@ -789,50 +792,55 @@ bool avl_remove2(avl_node_t **root, bag_elem_t elem,
                     else{
                         cur = NULL;
                     }
-            //printf("%ld\n",  cur);
-            //  printf("%ld\n",  cur->right);                
-                    //cur = (cur)->left ? (cur)->left : (cur)->right;
-                // printf("%ld\n",  cur);
-
+   
+                    
                     prevs[i] = cur;
+                  
                     free(old);
                 }
                 else{
-                    printf("in remove else\n");
-                    //prevs[i-1] ->right = cur->right;
+                    
+                    
                     avl_node_t *old = cur;
                     if(cur->left != NULL){
                         if(dir ==1){
                             prevs[i-1] ->right = cur->left;
+                            prevs[i] = cur->left;
+                          
                         }
                         else{
                             prevs[i-1] ->left = cur->left;
+                             prevs[i] = cur->left;
+                            
                         }
                         
                     }
                     else if (cur->right != NULL){
                         if(dir ==1){
                             prevs[i-1] ->right = cur->right;
+                             prevs[i] = cur->right;
+                             
                         }
                         else{
                             prevs[i-1] ->left = cur->right;
+                             prevs[i] = cur->right;
+                            
                         }
                         
                     }
                     else{
                         if(dir ==1){
                             prevs[i-1] ->right = NULL;
+                              prevs[i] = NULL;
+                            
                         }
                         else{
                             prevs[i-1] ->left = NULL;
+                            prevs[i] = NULL;
+                          
                         }
                     }
-            //printf("%ld\n",  cur);
-            //  printf("%ld\n",  cur->right);                
-                    //cur = (cur)->left ? (cur)->left : (cur)->right;
-                // printf("%ld\n",  cur);
-
-                    prevs[i] = cur;
+     
                     free(old);
 
                 }
@@ -842,31 +850,70 @@ bool avl_remove2(avl_node_t **root, bag_elem_t elem,
             break;
         }
         else if((*cmp)(elem,cur->elem) == 1){
-            printf("in right\n");
+          
             prevs[i] = cur;
+           
             cur = cur->right;
             dir = 1;
         }
         else{
-              printf("in left\n");
+            
             prevs[i] = cur;
+      
             cur  = cur->left;
             dir = 0;
         }
         i++;
     }
 
-    if (removed == true){
-        if(prevs[i] == NULL){
+   if (removed == true){
+        
+       if(prevs[i] == NULL){
+            
             i--;
         }
         while(i >= 0){
-            if(HEIGHT(prevs[i]->right) + 1 < HEIGHT(prevs[i]->left)){
-                avl_rebalance_to_the_right(&prevs[i]);
+           
+            if(prevs[i]->right == NULL && prevs[i]->left == NULL){
+               
+                i--;
+                continue;
+            }
+            else if(prevs[i]->right != NULL && prevs[i]->left == NULL && HEIGHT(prevs[i]->right) > 1 ){
+                if(i==0){
+                   avl_rebalance_to_the_left(root); 
+                }
+                else{
+                  avl_rebalance_to_the_left(&prevs[i]);  
+                }
+                
+            }
+            else if(prevs[i]->left != NULL && prevs[i]->right == NULL && HEIGHT(prevs[i]->left) > 1 ){
+             
+                if(i==0){
+                   avl_rebalance_to_the_right(root); 
+                }
+                else{
+                  avl_rebalance_to_the_right(&prevs[i]);  
+                }
+            }
+
+            else if(HEIGHT(prevs[i]->right) + 1 < HEIGHT(prevs[i]->left)){
+                if(i==0){
+                   avl_rebalance_to_the_right(root); 
+                }
+                else{
+                  avl_rebalance_to_the_right(&prevs[i]);  
+                }
             }
 
             else if(HEIGHT(prevs[i]->left) +1 < HEIGHT(prevs[i]->right)){
-                avl_rebalance_to_the_left(&prevs[i]);
+                if(i==0){
+                   avl_rebalance_to_the_left(root); 
+                }
+                else{
+                  avl_rebalance_to_the_left(&prevs[i]);  
+                }
             }
             else{
                 avl_update_height(prevs[i]);
@@ -876,7 +923,7 @@ bool avl_remove2(avl_node_t **root, bag_elem_t elem,
             i--;
         }
     }
-   //*root = prevs[0];
+    free(prevs);
     return removed;
 
 }
