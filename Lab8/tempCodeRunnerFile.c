@@ -1,0 +1,1 @@
+ //prevs[i-1] ->right = cur->right;
